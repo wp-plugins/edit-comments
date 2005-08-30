@@ -1,4 +1,7 @@
 <?php // Do not delete these lines
+
+die ("DO NOT USE ME YET");
+
 	if ('comments.php' == basename($_SERVER['SCRIPT_FILENAME']))
 		die ('Please do not load this page directly. Thanks!');
 

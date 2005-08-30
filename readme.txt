@@ -3,7 +3,7 @@
 Tags: comments,edit comments
 Contributors: jalenack
 This release: August 27, 2005
-Version: 0.11 Alpha
+Version: 0.2 Alpha
 
 ==== WARNING ====
 
@@ -12,6 +12,8 @@ This version of the plugin is ALPHA. That means its for people who are very comf
 == Description ==
 
 Edit Comments is a simple WordPress plugin that allows commenters to edit their own comments. To edit a comment, a user must have the same IP address as the user that made the comment and they must also make the edit within a specific time frame. The default edit time window is 30 minutes, but it can be changed easily in the plugin file.
+
+If you're logged in, it will use the more feature-enhanced wp-admin comment editing screen, but if you aren't then it will just allow you to edit the content of your comment. It's a good idea to test the plugin from a logged-out view as well.
 
 == Installation ==
 
@@ -37,11 +39,11 @@ And the end of the comment loop looks like:
 
 <?php endforeach; /* end for each comment */ ?>
 
-Anything inbetween those two bits of code will be repeated for each comment. We need to add a tag that will create the link somewhere in this loop. The code is: <?php jal_edit_comment(); ?>. An example would be:
+Anything inbetween those two bits of code will be repeated for each comment. We need to add a tag that will create the link somewhere in this loop. The code is: <?php jal_edit_comment_link(); ?>. An example would be:
 
-<small class="commentmetadata"><?php comment_date('F jS, Y') ?> at <?php comment_time() ?> | <?php jal_edit_comment(); ?></small>
+<small class="commentmetadata"><?php comment_date('F jS, Y') ?> at <?php comment_time() ?> | <?php jal_edit_comment_link(); ?></small>
 
-This will output the comment date and time, and then the edit link.
+This will output the comment date and time, and then the edit link. This function is a good replacement for WordPress's edit_comment_link(). It uses the same structure and arguments. 
 
 5b. Now we need to account for three possible scenarios.
 
@@ -56,22 +58,11 @@ Find this: <?php if ( $user_ID ) : ?> . It means there is someone logged in. The
 Here we go with a big edit. Delete this: <?php if ( $user_ID ) : ?>
 And change it to:
 
- <?php if ( isset($_GET['jal_edit_comments']) ) : 
- 	global $jal_minutes;
- 	$jal_comment = $wpdb->get_row("SELECT comment_content, comment_author_IP, comment_date FROM $wpdb->comments WHERE comment_ID = ".$_GET['jal_edit_comments']);
- 	$time_ago = time() - strtotime($jal_comment->comment_date);
- 	
-	// security doesn't matter now. Checked again during the edit
-	echo '<p><input type="hidden" name="jal_edit_this" value="'.$_GET['jal_edit_comments'].'" /></p>';
-
-
- 	if ($_SERVER['REMOTE_ADDR'] != $jal_comment->comment_author_IP || $time_ago >= 60 * $jal_minutes) :
- 		echo "<p><strong>You aren't allowed to edit this comment, either because you didn't write it or you passed the {$jal_minutes} minute time limit.</strong></p>";
- 		echo "</form>";
- 		// get out of this template
- 		return;
- 	endif;
- ?>
+<?php
+  if ( isset($_GET['jal_edit_comments']) ) :
+   $jal_comment = jal_edit_comment_init();
+   if (!$jal_comment) : return; endif;
+?>
  
  <?php elseif ( $user_ID ) : ?>
 
@@ -81,11 +72,7 @@ And change it to:
 
 And replace it with: 	
 
- <textarea name="comment" id="comment" cols="100%" rows="10" tabindex="4"><?php
-
-	if ($jal_comment) echo $jal_comment->comment_content;	
-
- ?></textarea>
+ <textarea name="comment" id="comment" cols="100%" rows="10" tabindex="4"><?php jal_comment_content($jal_comment); ?></textarea>
 
 5d. You're pretty much done! Now, we can just do a bit of beautification and cleanup.
 
@@ -115,10 +102,11 @@ Also, by having a time limit, users aren't allowed to go back and change somethi
 
 Lastly, it's good for security. In the extremely unlikely case that someone   else gets the same IP address as one of your commenters and then goes and visits your blog, they won't be able to edit the comment because of the time-limit.
 
-= How can I customize jal_edit_comment() ? =
+= How can I customize jal_edit_comment_link() ? =
 
-This function takes 4 arguments.
-jal_edit_comment ( $text, $before, $after, $editing_message )
+This function takes 4 arguments. It is  very similar in structure to WP's edit_comment_link()
+
+jal_edit_comment_link ( $text, $before, $after, $editing_message )
 
 $text is the text that the link will show for. Default is 'edit'
 
@@ -130,7 +118,7 @@ $editing_message is for when users have clicked the edit link. This message will
 
 Example: 
 
-jal_edit_comment("(e)", "<strong>", "</strong>", "<em>(editing)</em>");
+jal_edit_comment_link("(e)", "<strong>", "</strong>", "<em>(editing)</em>");
 
 Will output: <strong><a href="...edit_link url">(e)</a></strong> .
 
