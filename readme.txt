@@ -5,10 +5,6 @@ Contributors: jalenack
 This release: August 30, 2005
 Version: 0.3 Beta
 
-==== WARNING ====
-
-This version of the plugin is ALPHA. That means its for people who are very comfortable with code. As the code matures and I determine that its ready for mainstream use, I will remove this warning.
-
 == Description ==
 
 Edit Comments is a simple WordPress plugin that allows commenters to edit their own comments. To edit a comment, a user must have the same IP address as the user that made the comment and they must also make the edit within a specific time frame. The default edit time window is 30 minutes, but it can be changed easily in the plugin file.
