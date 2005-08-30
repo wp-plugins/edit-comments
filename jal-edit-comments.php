@@ -1,7 +1,7 @@
 <?php 
 /* 
 Plugin Name: Edit Comments
-Version: 0.2 alpha
+Version: 0.3 beta
 Plugin URI: http://code.jalenack.com
 Description: Allows users to edit their comments for up to 30 minutes after posting. To change the time limit, configure it in this plugin file
 Author: Andrew Sutherland

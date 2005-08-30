@@ -2,8 +2,8 @@
 
 Tags: comments,edit comments
 Contributors: jalenack
-This release: August 27, 2005
-Version: 0.2 Alpha
+This release: August 30, 2005
+Version: 0.3 Alpha
 
 ==== WARNING ====
 
@@ -94,6 +94,8 @@ The above uses a ternary operator. Basically, if the someone is editing a commen
 
 WordPress logs the IP address of all commenters, so we can compare the IP address of the comment to the IP address of the viewer. The plugin also checks the timestamp of the comment with the current time. If more than 30 minutes (default) has passed since the comment was made, then editing is off-limits. These two checks together make it secure.
 
+It uses some clever use of plugin hooks. You may notice the <form> action never has to change, it stays wp-comments-post.php . This plugin uses the 'init' hook of WordPress to do its deeds before the wp-comments-post.php file fully loads and it adds a new comment. Instead, this plugin spots the existence of a hidden input element, makes the appropriate edits, and then runs away before the file is fully loaded.
+
 = Why is there a time limit on editing? =
 
 This plugin is useful when a user hits "Submit Comment" and then realizes he or she made a glaring spelling error, or forgot an important part of what they were going to say.
@@ -121,6 +123,22 @@ Example:
 jal_edit_comment_link("(e)", "<strong>", "</strong>", "<em>(editing)</em>");
 
 Will output: <strong><a href="...edit_link url">(e)</a></strong> .
+
+= I can't find any of the code you mentioned in my comments.php file =
+
+All themes are different, and some may have a COMPLETELY different structure. The basic idea of this plugin is to use the same interface as your theme uses to make comments.  When you're editing a comment, the only thing that'll be updated is the content of the comment. So there should only be a box that'll allow content-editing. That means hiding the other inputs when an edit is happening. So you can try code like this:
+
+<?php
+  if ( isset($_GET['jal_edit_comments']) ) {
+   $jal_comment = jal_edit_comment_init();
+   if (!$jal_comment) : return; endif;
+  }
+?>
+
+<?php if ( !isset($_GET['jal_edit_comments']) ) { ?>...all the inputs for author, email, url, etc....<?php } ?>
+<textarea....><?php jal_comment_content($jal_comment); ?></textarea>
+
+If you're still lost, refer to the next FAQ.
 
 = I am totally lost on how to install this. Can you do it for me? =
 
