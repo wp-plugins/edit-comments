@@ -3,7 +3,7 @@
 Tags: comments,edit comments
 Contributors: jalenack
 This release: August 30, 2005
-Version: 0.3 Alpha
+Version: 0.3 Beta
 
 ==== WARNING ====
 
