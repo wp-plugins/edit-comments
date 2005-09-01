@@ -15,7 +15,7 @@ If you're logged in, it will use the more feature-enhanced wp-admin comment edit
 
 Unfortunately, the edits required to make this plugin work are fairly extensive. They don't, however, require any core edits, which means upgrading WordPress versions will not affect this plugin. I'll try to explain the edits the best I can.
 
-1. Upload the plugin file "edit-comments.php" to your plugins folder. This folder is located at /wp-contents/plugins/
+1. Upload the plugin file "jal-edit-comments.php" to your plugins folder. This folder is located at /wp-contents/plugins/
 
 2. Activate the plugin from your WordPress admin panel.
 
